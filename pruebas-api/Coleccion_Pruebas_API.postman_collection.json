@@ -1,0 +1,120 @@
+
+{
+  "info": {
+    "name": "AA1 - Pruebas automatizadas API REST",
+    "description": "Colección de pruebas funcionales automatizadas para consultar y crear publicaciones mediante JSONPlaceholder.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "GET - Consultar publicación",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "https://jsonplaceholder.typicode.com/posts/1",
+          "protocol": "https",
+          "host": [
+            "jsonplaceholder",
+            "typicode",
+            "com"
+          ],
+          "path": [
+            "posts",
+            "1"
+          ]
+        },
+        "description": "Consulta la publicación identificada con el ID 1."
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('El servidor responde con HTTP 200', function () {",
+              "    pm.response.to.have.status(200);",
+              "});",
+              "",
+              "pm.test('La respuesta tiene formato JSON', function () {",
+              "    pm.response.to.be.json;",
+              "});",
+              "",
+              "pm.test('La publicación contiene los campos esperados', function () {",
+              "    const data = pm.response.json();",
+              "    pm.expect(data).to.have.property('id', 1);",
+              "    pm.expect(data).to.have.property('userId');",
+              "    pm.expect(data.title).to.be.a('string');",
+              "    pm.expect(data.body).to.be.a('string');",
+              "    pm.expect(data.title.length).to.be.greaterThan(0);",
+              "    pm.expect(data.body.length).to.be.greaterThan(0);",
+              "});"
+            ]
+          }
+        }
+      ],
+      "response": []
+    },
+    {
+      "name": "POST - Crear publicación simulada",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"title\": \"Prueba automatizada con Postman\",\n  \"body\": \"Esta publicación permite comprobar el envío de datos mediante una solicitud POST.\",\n  \"userId\": 1\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "https://jsonplaceholder.typicode.com/posts",
+          "protocol": "https",
+          "host": [
+            "jsonplaceholder",
+            "typicode",
+            "com"
+          ],
+          "path": [
+            "posts"
+          ]
+        },
+        "description": "Envía una solicitud POST y valida la respuesta de creación simulada."
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('El servidor responde con HTTP 201', function () {",
+              "    pm.response.to.have.status(201);",
+              "});",
+              "",
+              "pm.test('La respuesta tiene formato JSON', function () {",
+              "    pm.response.to.be.json;",
+              "});",
+              "",
+              "pm.test('La respuesta contiene los datos enviados', function () {",
+              "    const data = pm.response.json();",
+              "    pm.expect(data).to.have.property('id');",
+              "    pm.expect(data.id).to.be.a('number');",
+              "    pm.expect(data.title).to.eql('Prueba automatizada con Postman');",
+              "    pm.expect(data.body).to.include('solicitud POST');",
+              "    pm.expect(data.userId).to.eql(1);",
+              "});"
+            ]
+          }
+        }
+      ],
+      "response": []
+    }
+  ]
+}
